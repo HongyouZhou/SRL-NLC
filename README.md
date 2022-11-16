@@ -46,3 +46,9 @@ Raw link to `hazard-world-robot` repo: <https://github.com/michahu/hazard-world-
 Models compatible with both HazardWorld-grid and HazardWorld-robot are in the `safety-starter-agents` folder. This submodule is built off [safety-starter-agents](https://github.com/openai/safety-starter-agents). 
 
 Raw link to `safety-starter-agents` repo: <https://github.com/michahu/safety-starter-agents>.
+
+
+## Problem fix
+### GLIBCXX_3.4.29 not found
+https://stackoverflow.com/questions/72205522/glibcxx-3-4-29-not-found
+export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libGLEW.so

@@ -4,3 +4,6 @@
 [submodule "safety-starter-agents"]
 	path = safety-starter-agents
 	url = git@github.com:michahu/safety-starter-agents.git
+[submodule "hazard-world-robot"]
+	path = hazard-world-robot
+	url = git@github.com:michahu/hazard-world-robot.git
