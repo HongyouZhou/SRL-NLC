@@ -24,12 +24,12 @@ WORD_TO_IMAGE = {
 }
 
 def collect_data(fpath, env, max_ep_len=50, num_episodes=1000, render=True):
-
+    profile = "test"
     assert env is not None, \
         "Environment not found!\n\n It looks like the environment wasn't saved, " + \
         "and we can't run the agent in it. :("
 
-    f = h5py.File(fpath + "/train" + '.h5', 'w')
+    f = h5py.File(fpath + "/" + profile + '.h5', 'w')
 
     observations = []
     constrain_masks = []
@@ -100,11 +100,7 @@ def collect_data(fpath, env, max_ep_len=50, num_episodes=1000, render=True):
                          chunks=True,
                          maxshape=(None),
                          compression='gzip', compression_opts=9)
-        f.create_dataset('avoid_obj',
-                         data=env.avoid_obj)
-        f.create_dataset('hc_all',
-                         data=env.hc)
-        f.create_dataset('missions', (len(missions), 1), dtype=h5py.special_dtype(vlen=str), data=missions)
+        f.create_dataset('missions', (len(missions)), dtype=h5py.special_dtype(vlen=str), data=missions)
 
     f.close()
     logger.log_tabular('EpRet', with_min_and_max=True)
@@ -112,7 +108,7 @@ def collect_data(fpath, env, max_ep_len=50, num_episodes=1000, render=True):
     logger.log_tabular('EpLen', average_only=True)
     logger.dump_tabular()
 
-    with h5py.File(fpath + "/test" + '.h5', 'r') as f:
+    with h5py.File(fpath + "/" + profile + '.h5', 'r') as f:
         for key in f.keys():
             print(f[key], key, f[key].name)
 
@@ -121,12 +117,12 @@ def collect_data(fpath, env, max_ep_len=50, num_episodes=1000, render=True):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--fpath', type=str)
+    parser.add_argument('--fpath', type=str, default="../data/mask")
     parser.add_argument(
         "--env", help="gym environment to load", default="MiniGrid-HazardWorld-B-v0"
     )
     parser.add_argument('--len', '-l', type=int, default=100)
-    parser.add_argument('--episodes', '-n', type=int, default=5000)
+    parser.add_argument('--episodes', '-n', type=int, default=100)
     parser.add_argument('--norender', '-nr', action='store_true')
     parser.add_argument('--itr', '-i', type=int, default=-1)
     parser.add_argument('--deterministic', '-d', action='store_true')

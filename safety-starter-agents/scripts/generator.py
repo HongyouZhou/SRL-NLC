@@ -12,7 +12,7 @@ class generator:
     def __call__(self):
         with h5py.File(self.file, 'r') as hf:
             for e in range(hf["obs"].shape[0]):
-                token = self.tokenizer(hf["missions"][e][0].decode("utf-8"),
+                token = self.tokenizer(hf["missions"][e].decode("utf-8"),
                                        return_tensors="tf",
                                        padding="max_length",
                                        max_length=self.description_size)
