@@ -41,12 +41,12 @@ def run_polopt_agent_grid(
         seed=0,
         render=False,
         # Experience collection:
-        steps_per_epoch=1e5,
-        epochs=1e3,
-        max_ep_len=1e3,
+        steps_per_epoch=5e3,
+        epochs=1e4,
+        max_ep_len=1e2,
         # Discount factors:
         gamma=0.95,
-        lam=0.93,
+        lam=0.90,
         cost_gamma=0.99,
         cost_lam=0.97,
         # Policy learning:
@@ -449,7 +449,7 @@ def run_polopt_agent_grid(
 
             o = o2
             ep_ret += r
-            ep_cost = o["violations"]
+            ep_cost = o["violations"] - cost_lim
             ep_len += 1
 
             terminal = d or (ep_len == max_ep_len)
@@ -480,7 +480,7 @@ def run_polopt_agent_grid(
                     print("Warning: trajectory cut off by epoch at %d steps." % ep_len)
 
                 # Reset environment
-                o, r, d, c, ep_ret, ep_len, ep_cost= env.reset(), 0, False, 0, 0, 0, 0
+                o, r, d, c, ep_ret, ep_len, ep_cost = env.reset(), 0, False, 0, 0, 0, 0
                 pre_violations = o["violations"]
                 training_package.update(dict(cost_lim=cost_lim))
 

@@ -45,14 +45,14 @@ def make_synonym_mission(fpath):
     f.create_dataset('missions_paraphrased', (len(paraphrase)), dtype=h5py.special_dtype(vlen=str), data=paraphrase)
     f.close()
 
-    with h5py.File(fpath + "/test" + '.h5', 'r') as f:
-        for key in f.keys():
-            print(f[key], key, f[key].name)
-
 
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--fpath', type=str, default="../data/mask")
     args = parser.parse_args()
-    make_synonym_mission(args.fpath)
+    # make_synonym_mission(args.fpath)
+
+    with h5py.File(args.fpath + "/test" + '.h5', 'r') as f:
+        for key in f.keys():
+            print(f[key], key, f[key].name)

@@ -4,15 +4,16 @@ from transformers import BertTokenizer
 
 
 class generator:
-    def __init__(self, file, description_size):
+    def __init__(self, file, description_size, mission_key="missions"):
         self.file = file
         self.description_size = description_size
+        self.mission_key = mission_key
         self.tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
 
     def __call__(self):
         with h5py.File(self.file, 'r') as hf:
             for e in range(hf["obs"].shape[0]):
-                token = self.tokenizer(hf["missions"][e].decode("utf-8"),
+                token = self.tokenizer(hf[self.mission_key][e].decode("utf-8"),
                                        return_tensors="tf",
                                        padding="max_length",
                                        max_length=self.description_size)

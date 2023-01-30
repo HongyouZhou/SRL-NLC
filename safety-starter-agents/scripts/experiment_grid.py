@@ -25,8 +25,8 @@ def main(robot, task, algo, seed, exp_name, cpu, env_name):
     # Hyperparameters
     exp_name = algo + '_' + robot + task
 
-    num_steps = 1e8
-    steps_per_epoch = 1e5
+    num_steps = 5e7
+    steps_per_epoch = 5e3
     epochs = int(num_steps / steps_per_epoch)
     save_freq = 100
     target_kl = 0.01

@@ -31,7 +31,7 @@ def accuracy(label, pred):
 
     # match = tf.cast(match, dtype=tf.float32)
     # mask = tf.cast(mask, dtype=tf.float32)
-    return tf.reduce_sum(match) / (batch_size * label.shape[1])
+    return tf.reduce_sum(match) / (BATCH_SIZE * label.shape[1])
 
 
 # @tf.function
@@ -61,7 +61,7 @@ def test_step(model, obs, constraint_mask, constraint_code, loss_obj_func, train
 
 if __name__ == '__main__':
     EPOCHS = 5
-    batch_size = 50
+    BATCH_SIZE = 50
     description_size = 100
 
 
@@ -74,20 +74,20 @@ if __name__ == '__main__':
     out_types = ((tf.int32, tf.int32, tf.int32, tf.float32), tf.int32)
     out_shapes = (((description_size, ), (description_size, ), (description_size, ), (7, 7, 3,)), (49,))
 
-    train_generator = generator("../data/mask/train.h5", description_size)
+    train_generator = generator("../data/mask/train.h5", description_size, "mission")
     train_data = tf.data.Dataset.from_generator(generator=train_generator,
                                                 output_types=out_types,
-                                                output_shapes=out_shapes).batch(batch_size)
+                                                output_shapes=out_shapes).batch(BATCH_SIZE)
 
-    batches = int(train_generator.len() / batch_size)
+    batches = int(train_generator.len() / BATCH_SIZE)
     train_data = train_data.apply(tf.data.experimental.assert_cardinality(batches))
     # train_data = train_data.map(dataset_fn)
 
-    test_generator = generator("../data/mask/test.h5", description_size)
-    test_batches = int(test_generator.len() / batch_size)
+    test_generator = generator("../data/mask/test.h5", description_size, "mission")
+    test_batches = int(test_generator.len() / BATCH_SIZE)
     test_data = tf.data.Dataset.from_generator(generator=test_generator,
                                                output_types=out_types,
-                                               output_shapes=out_shapes).batch(batch_size)
+                                               output_shapes=out_shapes).batch(BATCH_SIZE)
     # test_data = test_data.map(dataset_fn)
 
     for (input_ids, token_type_ids, attention_mask, o), label in train_data:
@@ -121,12 +121,12 @@ if __name__ == '__main__':
     #     name='constraint'
     # )
 
-    test_constraint = ["test" for i in range(batch_size)]
+    test_constraint = ["test" for i in range(BATCH_SIZE)]
     tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
     inputs = tokenizer(test_constraint, return_tensors="tf", padding="max_length", max_length=description_size)
 
     test_obs = tf.zeros(
-        (batch_size, 7, 7, 3),
+        (BATCH_SIZE, 7, 7, 3),
         dtype=tf.dtypes.float32,
         name='obs'
     )
